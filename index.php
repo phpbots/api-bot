@@ -27,8 +27,7 @@ if($text == "/start"){
         "chat_id"=>$chat_id,
         "text"=>"توکن ربات خود را ارسال کنید"
     ]);
-}else{
-    if($bot->result->tag == "new") {
+}else if($bot->result->tag == "new") {
         countmsgbot("sendMessage", [
             "chat_id" => $chat_id,
             "text" => "
@@ -62,4 +61,3 @@ if($text == "/start"){
             "text" => "متن شروع و نام کاربری مدیر خالی است"
         ]);
     }
-}
