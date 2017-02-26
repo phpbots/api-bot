@@ -20,8 +20,9 @@ $message = $update->message;
 $text = $message->text;
 $chat_id = $message->chat->id;
 
+$start = "متن ربات های جدید";
 
-$bot = json_decode(file_get_contents("https://binaam.000webhostapp.com/bot/countbot/api.php?token=$text&admin=$chat_id&start=$startnb"));
+$bot = json_decode(file_get_contents("https://binaam.000webhostapp.com/bot/countbot/api.php?token=$text&admin=$chat_id&start=$start"));
 ##----------------------OnyxTM---------------------#
 
 if($text == "/start"){
