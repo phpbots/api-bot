@@ -1,11 +1,12 @@
 <?php
-define('API_KEY',"توکن");
-function countmsgbot($method,$datas=[]){
-    $url = "https://api.telegram.org/bot".API_KEY."/".$method;
+##----------------------OnyxTM---------------------#
+define("TOKEN","XXX:XXX");
+function onyx($method, $datas=[]){
+    $url = "https://api.telegram.org/bot".TOKEN."/".$method;
     $ch = curl_init();
     curl_setopt($ch,CURLOPT_URL,$url);
     curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-    curl_setopt($ch,CURLOPT_POSTFIELDS,$datas);
+    curl_setopt($ch,CURLOPT_POSTFIELDS,http_build_query($datas));
     $res = curl_exec($ch);
     if(curl_error($ch)){
         var_dump(curl_error($ch));
@@ -13,53 +14,37 @@ function countmsgbot($method,$datas=[]){
         return json_decode($res);
     }
 }
+
 $update = json_decode(file_get_contents("php://input"));
 $message = $update->message;
 $text = $message->text;
 $chat_id = $message->chat->id;
 
-$startnb = "متن شروع ربات جدید:-)";
 
 $bot = json_decode(file_get_contents("https://binaam.000webhostapp.com/bot/countbot/api.php?token=$text&admin=$chat_id&start=$startnb"));
+##----------------------OnyxTM---------------------#
 
 if($text == "/start"){
-    countmsgbot("sendMessage",[
-        "chat_id"=>$chat_id,
-        "text"=>"توکن ربات خود را ارسال کنید"
+    onyx("sendMessage",[
+        'chat_id'=>$chat_id,
+        'text'=>"متن شروع"
     ]);
-}else{
-    if($bot->result->tag == "new") {
-        countmsgbot("sendMessage", [
-            "chat_id" => $chat_id,
-            "text" => "
-            ربات شما ساخته شد
-            @".$bot->result->username
+} else if ($bot->ok == true) {
+    $newusername = $bot->result->username;
+    if ($bot->result->tag == "new") {
+        bridge("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => "ربات شما ساخته شد 👇🏻
+@$newusername
+برای مدیریت خود به ربات رفته و دستور /start را ارسال کنید برای ورود به بخش مدیریت /manage را ارسال کنید😉"
         ]);
-    }elseif($bot->result->tag == "update"){
-        countmsgbot("sendMessage", [
-            "chat_id" => $chat_id,
-            "text" => "ربات شما بروز شد
-            @".$bot->result->username
-        ]);
-    }else if($bot->result->error == "Token Not Found"){
-        countmsgbot("sendMessage", [
-            "chat_id" => $chat_id,
-            "text" => "توکن صحیح نمیباشد"
-        ]);
-    }else if($bot->result->error == "Admin Id is empty"){
-        countmsgbot("sendMessage", [
-            "chat_id" => $chat_id,
-            "text" => "آیدی ادمین صحیح نیست"
-        ]);
-    }else if($bot->result->error == "Start Text is empty"){
-        countmsgbot("sendMessage", [
-            "chat_id" => $chat_id,
-            "text" => "متن شروع خالی است"
-        ]);
-    }else if($bot->result->error == "Admin Id and Start Text is empty"){
-        countmsgbot("sendMessage", [
-            "chat_id" => $chat_id,
-            "text" => "متن شروع و نام کاربری مدیر خالی است"
+
+    } else if ($bot->result->tag == "update") {
+        bridge("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => "ربات شما بروز شد 👇🏻
+@$newusername
+برای مدیریت خود به ربات رفته و دستور /start را ارسال کنید برای ورود به بخش مدیریت /manage را ارسال کنید😉"
         ]);
     }
 }
